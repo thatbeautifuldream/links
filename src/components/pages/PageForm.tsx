@@ -14,8 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useBackPath } from "@/components/shared/BackButton";
 
-
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { type Page, insertPageParams } from "@/lib/db/schema/pages";
 import {
@@ -24,9 +23,7 @@ import {
   updatePageAction,
 } from "@/lib/actions/pages";
 
-
 const PageForm = ({
-  
   page,
   openModal,
   closeModal,
@@ -34,7 +31,7 @@ const PageForm = ({
   postSuccess,
 }: {
   page?: Page | null;
-  
+
   openModal?: (page?: Page) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -43,17 +40,16 @@ const PageForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Page>(insertPageParams);
   const editing = !!page?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
   const router = useRouter();
   const backpath = useBackPath("pages");
 
-
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Page },
+    data?: { error: string; values: Page }
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -73,7 +69,7 @@ const PageForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const pageParsed = await insertPageParams.safeParseAsync({  ...payload });
+    const pageParsed = await insertPageParams.safeParseAsync({ ...payload });
     if (!pageParsed.success) {
       setErrors(pageParsed?.error.flatten().fieldErrors);
       return;
@@ -90,10 +86,11 @@ const PageForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingPage,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingPage,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updatePageAction({ ...values, id: page.id })
@@ -101,11 +98,11 @@ const PageForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingPage 
+          values: pendingPage,
         };
         onSuccess(
           editing ? "update" : "create",
-          error ? errorFormatted : undefined,
+          error ? errorFormatted : undefined
         );
       });
     } catch (e) {
@@ -118,11 +115,11 @@ const PageForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.name ? "text-destructive" : "",
+            errors?.name ? "text-destructive" : ""
           )}
         >
           Name
@@ -139,11 +136,11 @@ const PageForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.description ? "text-destructive" : "",
+            errors?.description ? "text-destructive" : ""
           )}
         >
           Description
@@ -155,16 +152,18 @@ const PageForm = ({
           defaultValue={page?.description ?? ""}
         />
         {errors?.description ? (
-          <p className="text-xs text-destructive mt-2">{errors.description[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.description[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.slug ? "text-destructive" : "",
+            errors?.slug ? "text-destructive" : ""
           )}
         >
           Slug
@@ -181,7 +180,7 @@ const PageForm = ({
           <div className="h-6" />
         )}
       </div>
-<div>
+      {/* <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -197,7 +196,7 @@ const PageForm = ({
         ) : (
           <div className="h-6" />
         )}
-      </div>
+      </div> */}
       {/* Schema fields end */}
 
       {/* Save Button */}
