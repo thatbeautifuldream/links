@@ -35,7 +35,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<HeadContent />
 			</head>
-			<body>
+			<body className="bg-gray-950">
 				{children}
 				{import.meta.env.DEV && (
 					<TanStackDevtools
